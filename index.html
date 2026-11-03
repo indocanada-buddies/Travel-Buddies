@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Indo-Canada Travel Buddies</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Familjen+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  --bg: #e9eef2; --surface: #ffffff; --surface-2: #f3f6f8; --ink: #12222f; --muted: #5b6b78; --line: #d3dce3;
+  --maple: #c8102e; --maple-ink: #ffffff; --saffron: #d9760b; --good: #1b7f4b;
+  --font-body: "Familjen Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0e1a24; --surface: #172836; --surface-2: #1d3243; --ink: #e8eff4; --muted: #9bb0bf; --line: #2b4357; --maple: #ff5a6e; --maple-ink: #1a0509; --saffron: #f2a04a; --good: #5fd39a; color-scheme: dark; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.45; padding: 24px max(16px, env(safe-area-inset-right, 0px)) 48px max(16px, env(safe-area-inset-left, 0px)); }
+.wrap { max-width: 1080px; margin: 0 auto; display: grid; gap: 24px; }
+[hidden] { display: none !important; }
+.top { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: flex-start; }
+h1 { margin: 0; font-size: clamp(1.9rem, 5vw, 3rem); line-height: 1.05; font-weight: 700; letter-spacing: -0.02em; text-wrap: balance; }
+h1 .arrow { color: var(--maple); font-family: var(--font-mono); font-weight: 500; }
+header p { margin: 8px 0 0; color: var(--muted); max-width: 56ch; }
+.who-bar { display: flex; gap: 10px; align-items: center; font-size: 0.9rem; color: var(--muted); }
+.layout { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 24px; align-items: start; }
+@media (max-width: 800px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: grid; gap: 14px; min-width: 0; }
+.panel h2 { margin: 0; font-size: 1.05rem; }
+.login { max-width: 420px; margin: 0 auto; width: 100%; }
+label, .lbl { display: grid; gap: 4px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+input, select { font: inherit; font-size: 1rem; text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--ink); background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: 9px 10px; width: 100%; min-width: 0; }
+.check { display: flex; gap: 8px; align-items: flex-start; text-transform: none; letter-spacing: 0; font-weight: 400; font-size: 0.92rem; color: var(--ink); }
+.check input { width: auto; margin-top: 4px; }
+:focus-visible { outline: 2px solid var(--maple); outline-offset: 2px; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.seg input { position: absolute; opacity: 0; pointer-events: none; width: 1px; }
+.seg label { margin: 0; padding: 9px 6px; text-align: center; cursor: pointer; background: var(--surface-2); color: var(--ink); text-transform: none; letter-spacing: 0; font-size: 0.92rem; font-weight: 500; display: block; }
+.seg input:checked + label { background: var(--maple); color: var(--maple-ink); font-weight: 700; }
+.seg input:focus-visible + label { outline: 2px solid var(--ink); outline-offset: -3px; }
+button { font: inherit; cursor: pointer; }
+.btn { background: var(--maple); color: var(--maple-ink); border: 0; border-radius: 6px; padding: 11px 14px; font-weight: 700; }
+.btn.alt { background: var(--surface-2); color: var(--ink); border: 1px solid var(--line); }
+.btn:disabled { opacity: 0.55; cursor: default; }
+.btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; font-size: 0.85rem; }
+.btn-ghost.danger { color: var(--maple); border-color: var(--maple); }
+.hint { font-size: 0.8rem; color: var(--muted); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.msg { font-size: 0.9rem; min-height: 1.2em; }
+.msg.err { color: var(--maple); } .msg.ok { color: var(--good); }
+.or { text-align: center; color: var(--muted); font-size: 0.85rem; }
+.filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; align-items: end; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; grid-column: 1 / -1; }
+.chip { background: var(--surface-2); border: 1px solid var(--line); color: var(--ink); border-radius: 999px; padding: 6px 14px; font-size: 0.92rem; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.count { font-family: var(--font-mono); font-size: 0.85rem; color: var(--muted); }
+.list { display: grid; gap: 14px; margin-top: 14px; }
+.ticket { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; display: grid; grid-template-columns: minmax(0, 1fr) auto; overflow: hidden; }
+.ticket-main { padding: 16px 18px; display: grid; gap: 10px; min-width: 0; }
+.route { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; }
+.code { font-family: var(--font-mono); font-weight: 500; font-size: clamp(1.6rem, 6vw, 2.2rem); line-height: 1; letter-spacing: 0.02em; }
+.city { font-size: 0.85rem; color: var(--muted); margin-top: 4px; overflow-wrap: anywhere; }
+.line { height: 2px; background: repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 12px); position: relative; min-width: 24px; }
+.line::after { content: "✈"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -52%); background: var(--surface); padding: 0 6px; color: var(--maple); }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.who { font-weight: 700; }
+.note { color: var(--muted); font-size: 0.9rem; overflow-wrap: anywhere; user-select: text; }
+.badge { font-family: var(--font-mono); font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: var(--surface-2); border: 1px solid var(--line); color: var(--muted); }
+.badge.same { background: var(--good); color: var(--bg); border-color: var(--good); }
+.badge.near { border-color: var(--saffron); color: var(--saffron); }
+.stub { border-left: 2px dashed var(--line); padding: 16px 18px; display: grid; align-content: center; justify-items: center; gap: 6px; min-width: 96px; text-align: center; background: var(--surface-2); }
+.stub .day { font-family: var(--font-mono); font-size: 2rem; line-height: 1; font-weight: 500; }
+.stub .mon { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.stub .rel { font-size: 0.75rem; color: var(--saffron); font-weight: 600; }
+.empty { border: 2px dashed var(--line); border-radius: 10px; padding: 32px 20px; text-align: center; color: var(--muted); }
+.empty strong { display: block; color: var(--ink); font-size: 1.1rem; margin-bottom: 4px; }
+footer { color: var(--muted); font-size: 0.8rem; }
+@media (max-width: 440px) { .ticket { grid-template-columns: minmax(0, 1fr); } .stub { border-left: 0; border-top: 2px dashed var(--line); grid-auto-flow: column; justify-content: start; gap: 12px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <header>
+      <h1>India <span class="arrow">⇄</span> Canada<br>find someone to fly with</h1>
+      <p>Post your flight date and route. Others on the same route can spot you and travel together.</p>
+    </header>
+    <div class="who-bar" id="who-bar" hidden><span id="who-email"></span><button class="btn-ghost" id="signout" type="button">Sign out</button></div>
+  </div>
+
+  <div class="panel login" id="login" hidden>
+    <h2>Sign in to see and post trips</h2>
+    <button class="btn" id="google" type="button">Continue with Google</button>
+    <div class="or">or</div>
+    <form id="email-form">
+      <label for="login-email">Email<input id="login-email" type="email" required autocomplete="email" placeholder="you@example.com"></label>
+      <button class="btn alt" id="email-send" type="submit" style="margin-top:10px;width:100%">Email me a sign-in link</button>
+    </form>
+    <div class="msg" id="login-msg" role="status"></div>
+    <div class="hint">No phone number needed. We do not store phone numbers.</div>
+  </div>
+
+  <div class="layout" id="app" hidden>
+    <form class="panel" id="form" autocomplete="off">
+      <h2>Post your trip</h2>
+      <div class="lbl">Direction
+        <div class="seg" role="radiogroup" aria-label="Direction">
+          <input type="radio" name="dir" id="dir-ic" value="IC" checked><label for="dir-ic">India → Canada</label>
+          <input type="radio" name="dir" id="dir-ci" value="CI"><label for="dir-ci">Canada → India</label>
+        </div>
+      </div>
+      <label for="f-name">Your name<input id="f-name" required maxlength="60" placeholder="e.g. Priya Raman"></label>
+      <label for="f-date">Day of travel<input id="f-date" type="date" required></label>
+      <label for="f-from">Origin city<input id="f-from" list="dl-from" required maxlength="40" placeholder="Start typing a city"></label>
+      <label for="f-to">Destination city<input id="f-to" list="dl-to" required maxlength="40" placeholder="Start typing a city"></label>
+      <label class="check" for="f-share"><input id="f-share" type="checkbox" checked><span>Let travellers contact me by email. My sign-in email will show on this trip.</span></label>
+      <datalist id="dl-from"></datalist><datalist id="dl-to"></datalist>
+      <button class="btn" id="submit" type="submit">Post trip</button>
+      <div class="msg" id="form-msg" role="status"></div>
+    </form>
+
+    <section style="min-width:0">
+      <div class="panel">
+        <div class="filters">
+          <div class="chips" id="dir-chips">
+            <button type="button" class="chip" data-dir="ALL" aria-pressed="true">All trips</button>
+            <button type="button" class="chip" data-dir="IC" aria-pressed="false">India → Canada</button>
+            <button type="button" class="chip" data-dir="CI" aria-pressed="false">Canada → India</button>
+          </div>
+          <label for="q-date">Travelling on<input id="q-date" type="date"></label>
+          <label for="q-win">Flexibility
+            <select id="q-win"><option value="0">Same day only</option><option value="3" selected>± 3 days</option><option value="7">± 7 days</option></select>
+          </label>
+          <label for="q-city">City<input id="q-city" placeholder="Search a city or code"></label>
+        </div>
+        <div class="count" id="count" role="status"></div>
+      </div>
+      <div class="list" id="list"></div>
+    </section>
+  </div>
+  <footer>Trips disappear after the travel date. Only people who sign in can see trips.</footer>
+</div>
+
+<script type="module">
+import { firebaseConfig } from "./firebase-config.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, addDoc, deleteDoc, doc, query, where, orderBy, onSnapshot, getDocs, serverTimestamp, Timestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const CITIES = {
+  IN: [["Delhi","DEL"],["Mumbai","BOM"],["Bengaluru","BLR"],["Chennai","MAA"],["Hyderabad","HYD"],["Kolkata","CCU"],["Ahmedabad","AMD"],["Kochi","COK"],["Pune","PNQ"],["Amritsar","ATQ"],["Trichy","TRZ"],["Coimbatore","CJB"],["Thiruvananthapuram","TRV"],["Jaipur","JAI"],["Goa","GOI"]],
+  CA: [["Toronto","YYZ"],["Vancouver","YVR"],["Montréal","YUL"],["Calgary","YYC"],["Edmonton","YEG"],["Ottawa","YOW"],["Winnipeg","YWG"],["Halifax","YHZ"],["Regina","YQR"],["Saskatoon","YXE"]]
+};
+const ALL = [...CITIES.IN, ...CITIES.CA];
+const codeOf = c => { const m = ALL.find(x => x[0].toLowerCase() === c.trim().toLowerCase()); return m ? m[1] : c.trim().slice(0, 3).toUpperCase(); };
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, "0");
+const iso = d => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+const today = iso(new Date());
+const dayNum = s => Math.round(new Date(s + "T00:00:00").getTime() / 86400000);
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const WD = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const mk = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const say = (el, t, c) => { el.textContent = t; el.className = "msg " + (c || ""); };
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+let user = null, trips = [], dirFilter = "ALL", confirming = null, unsub = null;
+
+/* Sign-in */
+$("google").addEventListener("click", async () => {
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); }
+  catch (e) { say($("login-msg"), "Google sign-in did not complete. Try again or use the email link.", "err"); }
+});
+$("email-form").addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const email = $("login-email").value.trim();
+  $("email-send").disabled = true;
+  try {
+    await sendSignInLinkToEmail(auth, email, { url: location.origin + location.pathname, handleCodeInApp: true });
+    try { localStorage.setItem("tb-email", email); } catch (e) {}
+    say($("login-msg"), "Check your inbox for the sign-in link. Open it on this same device.", "ok");
+  } catch (e) { say($("login-msg"), "Could not send the link. Check the email address and try again.", "err"); }
+  $("email-send").disabled = false;
+});
+$("signout").addEventListener("click", () => signOut(auth));
+
+if (isSignInWithEmailLink(auth, location.href)) {
+  let email = ""; try { email = localStorage.getItem("tb-email") || ""; } catch (e) {}
+  if (!email) email = window.prompt("Confirm your email to finish signing in") || "";
+  if (email) {
+    signInWithEmailLink(auth, email, location.href)
+      .then(() => { try { localStorage.removeItem("tb-email"); } catch (e) {} history.replaceState(null, "", location.pathname); })
+      .catch(() => say($("login-msg"), "That sign-in link is invalid or expired. Request a new one.", "err"));
+  }
+}
+
+onAuthStateChanged(auth, u => {
+  user = u;
+  $("login").hidden = !!u; $("app").hidden = !u; $("who-bar").hidden = !u;
+  if (unsub) { unsub(); unsub = null; }
+  if (!u) { trips = []; return; }
+  $("who-email").textContent = u.email || "";
+  if (!$("f-name").value && u.displayName) $("f-name").value = u.displayName;
+  startListening();
+  removeMyExpired();
+});
+
+/* Trips */
+function startListening() {
+  $("count").textContent = "Loading trips…";
+  const q = query(collection(db, "trips"), where("date", ">=", today), orderBy("date"));
+  unsub = onSnapshot(q, snap => {
+    trips = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    render();
+  }, () => { $("count").textContent = "Trips could not be loaded."; });
+}
+async function removeMyExpired() {
+  try {
+    const snap = await getDocs(query(collection(db, "trips"), where("ownerUid", "==", user.uid)));
+    for (const d of snap.docs) if (d.data().date < today) await deleteDoc(d.ref);
+  } catch (e) {}
+}
+
+function setCityLists() {
+  const d = document.querySelector('input[name="dir"]:checked').value;
+  const fill = (id, list) => $(id).replaceChildren(...list.map(c => { const o = document.createElement("option"); o.value = c[0]; o.label = c[1]; return o; }));
+  fill("dl-from", d === "IC" ? CITIES.IN : CITIES.CA);
+  fill("dl-to", d === "IC" ? CITIES.CA : CITIES.IN);
+}
+document.querySelectorAll('input[name="dir"]').forEach(r => r.addEventListener("change", () => { $("f-from").value = ""; $("f-to").value = ""; setCityLists(); }));
+$("f-date").min = today; $("q-date").min = today;
+setCityLists();
+
+function render() {
+  const qd = $("q-date").value, win = +$("q-win").value, qc = $("q-city").value.trim().toLowerCase();
+  let rows = trips.slice();
+  if (dirFilter !== "ALL") rows = rows.filter(t => t.dir === dirFilter);
+  if (qc) rows = rows.filter(t => (t.from + " " + t.to + " " + codeOf(t.from) + " " + codeOf(t.to)).toLowerCase().includes(qc));
+  if (qd) rows = rows.filter(t => Math.abs(dayNum(t.date) - dayNum(qd)) <= win);
+  const list = $("list"); list.replaceChildren();
+  $("count").textContent = rows.length + (rows.length === 1 ? " trip" : " trips") + " shown";
+  if (!rows.length) {
+    const e = mk("div", "empty");
+    e.append(mk("strong", null, trips.length ? "No trips match these filters" : "No trips posted yet"),
+      mk("span", null, trips.length ? "Widen the date range or clear the city search." : "Post yours with the form and others will find you here."));
+    list.append(e); return;
+  }
+  for (const t of rows) {
+    const diff = dayNum(t.date) - dayNum(today), dt = new Date(t.date + "T00:00:00");
+    const card = mk("article", "ticket"), main = mk("div", "ticket-main"), route = mk("div", "route");
+    const a = mk("div"); a.append(mk("div", "code", codeOf(t.from)), mk("div", "city", t.from));
+    const b = mk("div"); b.style.textAlign = "right"; b.append(mk("div", "code", codeOf(t.to)), mk("div", "city", t.to));
+    route.append(a, mk("div", "line"), b);
+    const meta = mk("div", "meta"); meta.append(mk("span", "who", t.name));
+    if (qd) { const off = Math.abs(dayNum(t.date) - dayNum(qd)); meta.append(off === 0 ? mk("span", "badge same", "Same day") : mk("span", "badge near", off + (off === 1 ? " day apart" : " days apart"))); }
+    main.append(route, meta);
+    if (t.email) main.append(mk("div", "note", "Contact: " + t.email));
+    if (user && t.ownerUid === user.uid) {
+      const btn = mk("button", "btn-ghost" + (confirming === t.id ? " danger" : ""), confirming === t.id ? "Confirm remove" : "Remove");
+      btn.type = "button";
+      btn.addEventListener("click", async () => {
+        if (confirming !== t.id) { confirming = t.id; render(); return; }
+        confirming = null;
+        try { await deleteDoc(doc(db, "trips", t.id)); } catch (e) { say($("form-msg"), "Could not remove that trip.", "err"); }
+      });
+      const row = mk("div"); row.append(btn); main.append(row);
+    }
+    const stub = mk("div", "stub");
+    stub.append(mk("div", "mon", WD[dt.getDay()]), mk("div", "day", pad(dt.getDate())), mk("div", "mon", MONTHS[dt.getMonth()] + " " + dt.getFullYear()), mk("div", "rel", diff === 0 ? "Today" : diff === 1 ? "Tomorrow" : "in " + diff + " days"));
+    card.append(main, stub); list.append(card);
+  }
+}
+document.querySelectorAll("#dir-chips .chip").forEach(c => c.addEventListener("click", () => {
+  dirFilter = c.dataset.dir;
+  document.querySelectorAll("#dir-chips .chip").forEach(x => x.setAttribute("aria-pressed", String(x === c)));
+  render();
+}));
+["q-date", "q-win", "q-city"].forEach(id => $(id).addEventListener("input", render));
+
+$("form").addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const msg = $("form-msg");
+  if (!user) return;
+  const rec = {
+    ownerUid: user.uid,
+    dir: document.querySelector('input[name="dir"]:checked').value,
+    name: $("f-name").value.trim(), date: $("f-date").value,
+    from: $("f-from").value.trim(), to: $("f-to").value.trim(),
+    email: $("f-share").checked ? (user.email || "") : "",
+    createdAt: serverTimestamp(),
+    expireAt: Timestamp.fromDate(new Date(new Date($("f-date").value + "T00:00:00").getTime() + 2 * 86400000))
+  };
+  if (!rec.name || !rec.date || !rec.from || !rec.to) return say(msg, "Fill in name, date, origin and destination.", "err");
+  if (rec.date < today) return say(msg, "Pick today or a later date.", "err");
+  if (rec.from.toLowerCase() === rec.to.toLowerCase()) return say(msg, "Origin and destination must differ.", "err");
+  $("submit").disabled = true;
+  try {
+    await addDoc(collection(db, "trips"), rec);
+    $("f-date").value = ""; $("f-from").value = ""; $("f-to").value = "";
+    say(msg, "Trip posted. Others can now find you.", "ok");
+  } catch (e) { say(msg, "Could not post. Check your connection and try again.", "err"); }
+  $("submit").disabled = false;
+});
+</script>
+</body>
+</html>
